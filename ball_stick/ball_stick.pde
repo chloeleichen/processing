@@ -1,12 +1,13 @@
-ball b1;
-ball b2;
-stick s;
+ball[] balls;
+stick[] sticks;
+
 
 int stickLen = 80;
+int nBalls = 10;
+int nSticks = nBalls -1;
 
 
-PVector intLoc1;
-PVector intLoc2;
+
 
 
 
@@ -14,20 +15,26 @@ PVector intLoc2;
 void setup(){
   size(500, 500);
   background(255);
-  intLoc1 = new PVector(width/2, height/2);
-  intLoc2 = new PVector(width/2, height- stickLen);
   
-  float r = 10;
   
-  b1 = new ball(intLoc1, r, color(0));
-  b2 = new ball(intLoc2, r, color(0));
   
-  s = new stick(b1, b2);
+  float r = 20;
+  balls = new ball[nBalls];
+  sticks = new stick[nSticks];
+  for( int i = 0; i < nBalls; i ++){
+
+    balls[i] = new ball( new PVector(width/2 + stickLen *i, height/2), r, color(0));
+    if (i > 0){
+    sticks[i-1]= new stick(balls[i-1], balls[i]);
+    }
+  }
+  
 }
 
 void draw(){
   background(255);
-  s.update();
-  s.display();
- 
+  for(int i = 0; i < nSticks; i ++){
+  sticks[i].update();
+  sticks[i].display();
+  }
 }

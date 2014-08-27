@@ -60,7 +60,7 @@ void bounce(){
     if(location.y < radius){
     location.y = radius;
     oldLocation.y = location.y;
-    location.y -= nudge.y;
+    location.y += nudge.y;
     }
   
   }

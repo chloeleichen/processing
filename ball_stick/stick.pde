@@ -12,7 +12,7 @@ class stick{
   
   
   void constrainLength(){
-   float k = 1;
+   float k = 0.1;
    PVector delta = PVector.sub(b2.location, b1.location);
    float deltaLength = delta.mag();
    float d =((deltaLength - r) /deltaLength);
