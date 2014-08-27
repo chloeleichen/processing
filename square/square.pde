@@ -12,7 +12,7 @@ void setup(){
   noStroke();
   x= width/2;
   y= height/2;
-  w=150;
+  w=50;
   spdX= 2.1;
   spdY= 1.5;
   rotSpd = PI/180;
@@ -23,7 +23,7 @@ void setup(){
 
 
 void draw(){
-  background(255, 127, 0);
+  background(255);
   
   pushMatrix();
   translate(x, y);
