@@ -1,4 +1,4 @@
-abstract class Widget{
+abstract class Widget implements Clickable {
   PVector location;
   float sz;
   color col;

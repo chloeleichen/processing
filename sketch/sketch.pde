@@ -1,6 +1,10 @@
 Widget [] pieces;
 int N = 10;
 
+PVector cm, pm;
+Widget target;
+
+
 void setup(){
   background(255);
   size(500, 500);
@@ -26,5 +30,29 @@ void draw(){
   pieces[i].move();
     }
 }
+    
+void mousePressed(){
+  for(int i = 0; i < N; i ++){
+    if (pieces[i].clicked()){
+      target = pieces[i];
+    }
+  }
+  pm = new PVector(mouseX, mouseY);
+}
+
+void mouseDragged(){
+  cm = new PVector(mouseX, mouseY);
+  PVector d = PVector.sub(pm, cm);
+  
+  d.normalize();
+  
+  target.setSpeed(d);
+  target.col= color(0);
+}
+
+
+  
+  
+
 
 

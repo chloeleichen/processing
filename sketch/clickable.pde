@@ -1,0 +1,4 @@
+interface Clickable{
+  boolean clicked();
+}
+

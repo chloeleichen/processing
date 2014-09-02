@@ -55,6 +55,13 @@ class Hexagon extends Widget{
       speed.y = -speed.y;
     }
  }
+ 
+ 
+   
+  boolean clicked(){
+    PVector m = new PVector(mouseX, mouseY);
+    return (PVector.dist(location, m)< r);
+  }
 }
  
    
