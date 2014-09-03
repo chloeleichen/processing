@@ -5,6 +5,7 @@ class Particle
   float colR, colG, colB;
 
 
+
   Particle(float _x, float _y)
   {
     vx = 0;
@@ -17,14 +18,17 @@ class Particle
   }
   
   void display(){
+   float r;
     colR = map(wt, 0, 5, 0, 255);
     colG = map(vx, -1, 1, 0, 128);
     colB = map(vy, -1, 1, 0, 185);
+    r = map(rad, 1, 25, medRadius, medRadius*1.5 );
+    strokeWeight(r);
     stroke(color(colR, colG, colB));
 
     point(x, y);
     
-    //print("vx =" + vx + "\n");
+    //print("rad =" + rad + "\n");
 
 
     
