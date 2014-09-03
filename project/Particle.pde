@@ -22,7 +22,7 @@ class Particle
     colR = map(wt, 0, 5, 0, 255);
     colG = map(vx, -1, 1, 0, 128);
     colB = map(vy, -1, 1, 0, 185);
-    r = map(rad, 1, 25, medRadius, medRadius*1.5 );
+    r = map(rad, minRadius,maxRadius, medRadius, medRadius*1.5 );
     strokeWeight(r);
     stroke(color(colR, colG, colB));
 
