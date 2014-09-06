@@ -73,6 +73,18 @@ class Mia{
     
   }
   
+  void drawNeck(){
+    
+    rectMode(CORNER);
+    fill(0);
+    e.setFillGap(0.8);
+    pushMatrix();
+    rotate(0.1);
+    e.rect(x3, y3*0.55,w*0.8,w*10);
+    popMatrix();
+    
+  }
+  
   
   
   
