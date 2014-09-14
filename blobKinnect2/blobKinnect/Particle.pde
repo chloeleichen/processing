@@ -42,8 +42,8 @@ yp=y;
 stroke(col);
 strokeWeight(2);
 // line from previous to current position
-//point(x, y);
-line(xp, yp, x, y);
+point(x, y);
+//line(xp, yp, x, y);
 // set previous to current position
 xp=x;
 yp=y;

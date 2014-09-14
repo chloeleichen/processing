@@ -1,3 +1,5 @@
+//Kinect Silhouete by Chloe Chen 2014
+
 import SimpleOpenNI.*;
 import java.util.*;
 SimpleOpenNI context;

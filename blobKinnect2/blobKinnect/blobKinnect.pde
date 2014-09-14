@@ -1,7 +1,7 @@
-// Kinect Flow Example by Amnon Owed (15/09/12)
+//BlobKinnect Created by Chloe 2014
+// Inspired by Kinect Flow Example by Amnon Owed (15/09/12)
 
 // import libraries
-import processing.opengl.*; // opengl
 import SimpleOpenNI.*; // kinect
 import blobDetection.*; // blobs
 
@@ -33,10 +33,12 @@ String[] palettes = {
 "-16711663,-13888933,-9029017,-5213092,-1787063,-11375744,-2167516,-15713402,-5389468,-2064585"
 };
 
+
 // an array called flow of 2250 Particle objects (see Particle class)
 Particle[] flow = new Particle[2250];
 // global variables to influence the movement of all particles
 float globalX, globalY;
+
 
 void setup() {
 // it's possible to customize this, for example 1920x1080
@@ -72,7 +74,7 @@ setupFlowfield();
 
 void draw() {
 background(0);
-cam = createImage(width, height, ARGB);
+cam = createImage(width, height, RGB);
 // update the SimpleOpenNI object
 context.update();
 // put the image into a PImage
@@ -96,18 +98,18 @@ context.update();
 cam.updatePixels();
       
   
-//// copy the image into the smaller blob image
-blobs.copy(cam, 0, 0, cam.width, cam.height, 0, 0, blobs.width, blobs.height);
-// blur the blob image
-blobs.filter(BLUR);
-// detect the blobs
-theBlobDetection.computeBlobs(blobs.pixels);
-// clear the polygon (original functionality)
-poly.reset();
-// create the polygon from the blobs (custom functionality, see class)
-poly.createPolygon();
-drawFlowfield();
-}
+    //// copy the image into the smaller blob image
+    blobs.copy(cam, 0, 0, cam.width, cam.height, 0, 0, blobs.width, blobs.height);
+    // blur the blob image
+    blobs.filter(BLUR);
+    // detect the blobs
+    theBlobDetection.computeBlobs(blobs.pixels);
+    // clear the polygon (original functionality)
+    poly.reset();
+    // create the polygon from the blobs (custom functionality, see class)
+    poly.createPolygon();
+    drawFlowfield();
+   }
 
 }
 
@@ -137,13 +139,13 @@ p.updateAndDisplay();
 }
 //// sets the colors every nth frame
 void setRandomColors(int nthFrame) {
-if (frameCount % nthFrame == 0) {
-// turn a palette into a series of strings
-String[] paletteStrings = split(palettes[int(random(palettes.length))], ",");
-// turn strings into colors
-color[] colorPalette = new color[paletteStrings.length];
-for (int i=0; i < paletteStrings.length; i ++){
-  colorPalette[i] = int(paletteStrings[i]);
+    if (frameCount % nthFrame == 0) {
+    // turn a palette into a series of strings
+    String[] paletteStrings = split(palettes[int(random(palettes.length))], ",");
+    // turn strings into colors
+    color[] colorPalette = new color[paletteStrings.length];
+    for (int i=0; i < paletteStrings.length; i ++){
+      colorPalette[i] = int(paletteStrings[i]);
 }
 
 // set all particle colors randomly to color from palette (excluding first aka background color)
