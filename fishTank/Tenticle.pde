@@ -21,5 +21,5 @@ class Tenticle {
       ellipse(loc.x+x2, loc.y-y2, len-q, len-q);
     }
   }
-}
 
+}

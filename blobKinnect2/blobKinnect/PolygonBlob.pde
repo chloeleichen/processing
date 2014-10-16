@@ -1,9 +1,8 @@
-// an extended polygon class with my own customized createPolygon() method (feel free to improve!)
+//Polygonblob class by Amnon Owed (15/09/12)
+
 class PolygonBlob extends Polygon {
 
-// took me some time to make this method fully self-sufficient
-// now it works quite well in creating a correct polygon from a person's blob
-// of course many thanks to v3ga, because the library already does a lot of the work
+  
 void createPolygon() {
 // an arrayList... of arrayLists... of PVectors
 // the arrayLists of PVectors are basically the person's contours (almost but not completely in a polygon-correct order)
