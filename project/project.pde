@@ -1,6 +1,17 @@
+// Processing video pixelation 
+//Kay 2014 
+
+
+import ddf.minim.*;
+
+Minim minim;
+AudioSample kick;
+AudioSample snare;
+
+
+
 // Video pixelation
-// Play with these...
-float ditherFactor = 10.0; // smaller numbers = more dots, slower frame rate
+float ditherFactor = 20.0; // smaller numbers = more dots, slower frame rate
 float dotDensity = 2.9; // higher ratios = more dots
 
 
@@ -58,9 +69,22 @@ void setup() {
 //  println("min-max = " + minRadius + " --> " + maxRadius);
  
 
+  minim = new Minim(this);
+
+  // load BD.wav from the data folder
+  kick = minim.loadSample( "BD.mp3", // filename
+                            512      // buffer size
+                         );
+   // if a file doesn't exist, loadSample will return null
+  if ( kick == null ) println("Didn't get kick!");
   
-  
+  // load SD.wav from the data folder
+  snare = minim.loadSample("SD.wav", 512);
+  if ( snare == null ) println("Didn't get snare!");
 }
+                         
+                         
+
 
 
 
@@ -121,6 +145,7 @@ void doPhysics()
         p.fy += dy*scle;
         pj.fx -= dx*scle;
         pj.fy -= dy*scle;
+        snare.trigger();
       }
     }
   }
@@ -153,6 +178,8 @@ void doPhysics()
   scle = scle*kSpeed/distance;
         p.fx += dx*scle;
         p.fy += dy*scle;
+        kick.trigger();
+        
     }
     // top edge
     distance = dy = p.y - 0;    dx = 0;

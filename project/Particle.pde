@@ -3,6 +3,8 @@ class Particle
   float  x,y,vx,vy,rad;
   float  fx,fy,wt;
   float colR, colG, colB;
+  float dice = random(3);
+  
 
 
 
@@ -23,10 +25,30 @@ class Particle
     colG = map(vx, -1, 1, 0, 128);
     colB = map(vy, -1, 1, 0, 185);
     r = map(rad, minRadius,maxRadius, medRadius, medRadius*1.5 );
+
+    
+//    if (dice <1){
+//      
+//    noStroke();
+//    fill(color(colR, colG, colB));
+//    rect(x, y,r,r);
+//    }
+//    
+//    if ((1 < dice) &&(dice <2)){
+//       noStroke();
+//      fill(color(colR, colG, colB));
+//      
+//      ellipse(x, y,r,r);
+//    }
+//    
+//     if ((2 < dice) &&(dice<3)){
+//      line(x, y,x+r,y+r);
+//    }
+//    else{
     strokeWeight(r);
     stroke(color(colR, colG, colB));
-
     point(x, y);
+  //}
     
     //print("rad =" + rad + "\n");
 

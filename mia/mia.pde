@@ -259,5 +259,10 @@ void keyPressed()
     context.setMirror(!context.mirror());
     break;
   }
+  
+    case ' A':
+    context.setMirror(!context.mirror());
+    break;
+  }
 }  
 
