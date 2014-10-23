@@ -8,9 +8,26 @@ import SimpleOpenNI.*;
 
 SimpleOpenNI  context;
 
+PVector hand;
 
 float len;
-color torsoColor;
+color torsoColor = color(149, 165, 166);
+color fumeColor= color(231, 76, 60);
+
+//draw cigi
+
+Smoke[] fumes = new Smoke[500];
+int fumesCount =500;
+float noiseScale = 200, noiseStrength = 10, noiseZRange = 0.4;
+float overlayAlpha = 80, fumesAlpha = 90, strokeWidth = 0.3;
+
+float age = 100;
+float r = 20;
+float xOffset = 0.0;
+float yOffset = 0.0;
+boolean cigi = false;
+
+
 
 void setup()
 {
@@ -35,7 +52,10 @@ void setup()
   
   size(context.depthWidth(), context.depthHeight()*2); 
   
-  torsoColor = color(149, 165, 166);
+  
+  //DRAW CIGI
+  for(int i=0; i<fumes.length; i++) fumes[i] = new Smoke();
+
   
 }
 
@@ -46,6 +66,7 @@ void draw()
   len = (PVector.dist(getJointPosition(SimpleOpenNI.SKEL_NECK),getJointPosition(SimpleOpenNI.SKEL_TORSO)))/3;
   // update the cam
   context.update();
+  hand = getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND);
   
   // draw depthImageMap
   //image(context.depthImage(),0,0);
@@ -53,6 +74,9 @@ void draw()
   // draw the skeleton if it's available
   if(context.isTrackingSkeleton(1)) {
     drawSimpleFigure();
+    if(cigi == true){
+    drawCigi(getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND));
+    }
   }
 }
 
@@ -62,39 +86,7 @@ void draw()
 void drawSimpleFigure() {
 
 
-//LEFT TORSO
 
-drawLine(getJointPosition(SimpleOpenNI.SKEL_NECK),getJointPosition(SimpleOpenNI.SKEL_LEFT_SHOULDER) );
-drawLine(getJointPosition(SimpleOpenNI.SKEL_LEFT_SHOULDER),getJointPosition(SimpleOpenNI.SKEL_LEFT_ELBOW));
-drawLine(getJointPosition(SimpleOpenNI.SKEL_LEFT_ELBOW),getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND));
-
-
-//RIGHT ROESO
-
-drawLine(getJointPosition(SimpleOpenNI.SKEL_NECK),getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER) );
-drawLine(getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER),getJointPosition(SimpleOpenNI.SKEL_RIGHT_ELBOW));
-drawLine(getJointPosition(SimpleOpenNI.SKEL_RIGHT_ELBOW),getJointPosition(SimpleOpenNI.SKEL_RIGHT_HAND));
-
-
-//LEFT LOWER BODY
-
-
-//drawLine(getJointPosition(SimpleOpenNI.SKEL_TORSO),getJointPosition(SimpleOpenNI.SKEL_LEFT_HIP) );
-//drawLine(getJointPosition(SimpleOpenNI.SKEL_LEFT_HIP),getJointPosition(SimpleOpenNI.SKEL_LEFT_KNEE));
-//drawLine(getJointPosition(SimpleOpenNI.SKEL_LEFT_KNEE),getJointPosition(SimpleOpenNI.SKEL_LEFT_FOOT));
-//
-//
-////RIGHT LOWER BODY
-//
-//
-//drawLine(getJointPosition(SimpleOpenNI.SKEL_TORSO),getJointPosition(SimpleOpenNI.SKEL_RIGHT_HIP) );
-//drawLine(getJointPosition(SimpleOpenNI.SKEL_RIGHT_HIP),getJointPosition(SimpleOpenNI.SKEL_RIGHT_KNEE));
-//drawLine(getJointPosition(SimpleOpenNI.SKEL_RIGHT_KNEE),getJointPosition(SimpleOpenNI.SKEL_RIGHT_FOOT));
-
-//BODY IN THE MIDDLE
-
-drawLine(getJointPosition(SimpleOpenNI.SKEL_LEFT_SHOULDER),getJointPosition(SimpleOpenNI.SKEL_TORSO) );
-drawLine(getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER),getJointPosition(SimpleOpenNI.SKEL_TORSO));
 
 
 //HEAD AND NECK
@@ -105,7 +97,7 @@ drawLine(getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER),getJointPosition(Sim
 
 //drawbody
 
-drawBody(getJointPosition(SimpleOpenNI.SKEL_HEAD), getJointPosition(SimpleOpenNI.SKEL_NECK), getJointPosition(SimpleOpenNI.SKEL_LEFT_SHOULDER), getJointPosition(SimpleOpenNI.SKEL_TORSO), getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER));
+drawBody(getJointPosition(SimpleOpenNI.SKEL_NECK), getJointPosition(SimpleOpenNI.SKEL_LEFT_SHOULDER), getJointPosition(SimpleOpenNI.SKEL_TORSO), getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER));
 drawHip(getJointPosition(SimpleOpenNI.SKEL_TORSO), getJointPosition(SimpleOpenNI.SKEL_LEFT_HIP),getJointPosition(SimpleOpenNI.SKEL_RIGHT_HIP));
 
 
@@ -124,6 +116,12 @@ drawArm(getJointPosition(SimpleOpenNI.SKEL_NECK), getJointPosition(SimpleOpenNI.
 drawArm(getJointPosition(SimpleOpenNI.SKEL_NECK), getJointPosition(SimpleOpenNI.SKEL_RIGHT_SHOULDER),getJointPosition(SimpleOpenNI.SKEL_RIGHT_ELBOW), getJointPosition(SimpleOpenNI.SKEL_RIGHT_HAND), false);
 
 
+//DRAW HEAD
+drawHead(getJointPosition(SimpleOpenNI.SKEL_NECK));
+
+
+
+
 
 }
 
@@ -140,14 +138,14 @@ PVector getJointPosition(int joint) {
 
 
 
-void drawBody(PVector head, PVector neck, PVector lShoulder, PVector torso, PVector rShoulder ){
+void drawBody( PVector neck, PVector lShoulder, PVector torso, PVector rShoulder ){
   
   fill(torsoColor);
   noStroke();  
-  PVector center = PVector.add(head, neck);
-  center.div(2);
+  
+  
   beginShape();
-  vertex(center.x, center.y);
+  vertex(neck.x, neck.y-len);
   vertex(lShoulder.x, lShoulder.y);
   vertex(torso.x - len, torso.y);
   vertex(torso.x + len, torso.y);
@@ -199,14 +197,16 @@ void drawLeg(PVector torso, PVector hip, PVector knee, PVector foot, Boolean lef
 void drawArm(PVector neck, PVector shoulder, PVector elbow, PVector hand, Boolean left){
   fill(torsoColor);
   
-  noStroke();  
-  
-  beginShape();
   PVector center = PVector.add(neck, shoulder);
   center.div(2);
 
+  noStroke();  
+  
+  beginShape();
 
-   vertex(center.x, center.y);
+
+
+  vertex(center.x, center.y);
   vertex(shoulder.x, shoulder.y);
   vertex(elbow.x, elbow.y);
   vertex(hand.x, hand.y);
@@ -222,6 +222,22 @@ void drawArm(PVector neck, PVector shoulder, PVector elbow, PVector hand, Boolea
  
 
 }
+
+
+void drawHead( PVector neck){
+  fill(torsoColor);
+  ellipse(neck.x, neck.y-20, len*1.5, len*1.5);
+}
+
+PVector getP(PVector p1, PVector p2, float num){
+  PVector p = PVector.add(p1, p1);
+  p.div(num);
+  
+  return p;
+  
+}
+
+
 
 
 
@@ -255,14 +271,32 @@ void keyPressed()
 {
   switch(key)
   {
-  case ' ':
-    context.setMirror(!context.mirror());
+  case 'c':
+    cigi = true;
+    break;
+    
+    case 'd':
+    cigi = false;
     break;
   }
+ 
   
-    case ' A':
-    context.setMirror(!context.mirror());
-    break;
-  }
+  
 }  
+
+
+void drawCigi(PVector hand){
+  
+  for(int i=0; i<fumesCount; i++) {
+
+    stroke(fumeColor);
+    fumes[i].update(hand);
+}
+    strokeWeight(5);
+    stroke(255);
+    line(hand.x-r, hand.y-r, hand.x, hand.y);
+
+
+
+}
 
