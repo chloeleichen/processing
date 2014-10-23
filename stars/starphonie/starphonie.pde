@@ -10,7 +10,7 @@ Star destStar;
 Star startStar;
 
 //Joe intro
-IntroStar[] introStars = new IntroStar[400];
+IntroStar[] introStars = new IntroStar[300];
 PImage bgImg;
 PImage logoImg;
 //PImage returnImg;
@@ -30,13 +30,16 @@ cDebugger gDebugger;
 boolean gIsDebugOn = true;
 int gFontSize = 16;
 
+
+
+
 void setup() {
   //Joe setup
     introScreen = true;
     logoImg = loadImage("logo_lo.png");
     //returnImg = loadImage("return.png");
     for (int i = 0; i<introStars.length; i++) {
-      introStars[i] = new IntroStar(int(random(0, width)), (random(0, height)), (random(0.5, 3)), int(random(1, 6)));
+      introStars[i] = new IntroStar(int(random(0, width)), (random(0, height)), (random(0.5, 3)), int(random(1, 20)));
     }
   
   background = loadImage("background.jpg");
@@ -112,7 +115,8 @@ void draw() {
   }
     
   for (int i = 0 ; i < importedStars.length ; i++) {
-    ellipse(importedStars[i].getX(), importedStars[i].getY(),importedStars[i].getSize(), importedStars[i].getSize());
+    importedStars[i].display();
+    //ellipse(importedStars[i].getX(), importedStars[i].getY(),importedStars[i].getSize(), importedStars[i].getSize());
   }
   
   for (int i = 0 ; i < addStarCursor; i++) {

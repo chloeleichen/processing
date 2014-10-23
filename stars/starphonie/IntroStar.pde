@@ -9,7 +9,7 @@ class IntroStar {
     y = tempy;
     speed = tempspeed;
     size = tempsize;
-    filter( BLUR, 6 );
+    //filter( BLUR, 6 );
   }
  
   void mass() {
@@ -43,7 +43,7 @@ class IntroStar {
     float alpha = map(i, 0, 49, 10, 100);
       
      fill(random(noise(i)*250, 250), random(noise(i) *250, 250), random(noise(i)*250, 250), alpha);
-      ellipse(x, y, size*10/(i+1), size*10/(i+1));
+      ellipse(x, y, size*12/(i+1), size*12/(i+1));
       
     }
 
