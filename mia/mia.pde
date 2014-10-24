@@ -31,6 +31,7 @@ boolean shade = false;
 boolean randomLight = false;
 boolean catHead = false;
 
+
 //Draw lights 
 
 //Draw Cat 
@@ -43,7 +44,18 @@ boolean catHead = false;
   float spdX;
   float spdY;
 
-//DRAW USER 
+//DRAW MUSIC 
+
+import ddf.minim.*;
+
+Minim minim;
+AudioPlayer again;
+AudioPlayer meow;
+AudioPlayer groove;
+
+
+
+
 
 void setup()
 {
@@ -88,14 +100,26 @@ void setup()
   //DRAW CIGI
   for(int i=0; i<fumes.length; i++) fumes[i] = new Smoke();
 
+
+//SET UP MUSIC 
+
+minim = new Minim(this);
+  again = minim.loadFile("again.aif");
+  meow = minim.loadFile("meow.mp3");
+  groove = minim.loadFile("groove.mp3");
+  
+  
+  
   
 }
 
 void draw()
 {
+  
+  
   if(shade == false){
     background(0);
-  } else{
+  } else if{
   
   fill(0, 12);
   rect(0, 0, width, height);
@@ -116,8 +140,10 @@ void draw()
   // draw the skeleton if it's available
   if(context.isTrackingSkeleton(1)) {
     drawSimpleFigure();
+    //again.play();
+    //again.loop();
     
-         if(catHead == true){
+    if(catHead == true){
     drawCat();
     }
     
@@ -125,7 +151,6 @@ void draw()
     if(cigi == true){
     drawCigi(getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND));
     }
-    
 
   }
   
@@ -384,9 +409,14 @@ void drawCigi(PVector hand){
 }
 
 void drawLight(){
-  if(randomLight == true){   
+  loopMusic(again);
+  if(randomLight == true){  
+    
    lightColor = color(int(random(255)), int(random(255)), int(random(255)));
    torsoColor = color(int(random(255)), int(random(255)), int(random(255)));
+   drawMusic(again);
+   controlMusic(again);
+   
   }
   
  fill(lightColor);
@@ -402,10 +432,45 @@ void drawCat(){
   torsoColor = color(192, 57, 43);
   pushMatrix();
   translate(getJointPosition(SimpleOpenNI.SKEL_NECK).x, getJointPosition(SimpleOpenNI.SKEL_NECK).y-70);
-
-  cat.display(); 
+//  meow.play();
+  cat.display();
+  loopMusic(meow);
   popMatrix();
 
 }
   
+  //DRAW MUSIC 
+  
+  void drawMusic(AudioPlayer player){
+ 
+  stroke( 255);
+  
+  for(int i = 0; i < player.bufferSize() - 1; i++)
+  {
+    line(i, 50  + player.left.get(i)*50,  i+1, 50  +player.left.get(i+1)*50);
+    line(i, 150 + player.right.get(i)*50, i+1, 150 + player.right.get(i+1)*50);
+  }
+  
+  stroke( 255, 0, 0, 10 );
+  float position = map( player.position(), 0, player.length(), 0, width );
+  line( position, 0, position, height );
+}
+    
+
+
+
+void controlMusic(AudioPlayer player){
+  int position = int( map( getJointPosition(SimpleOpenNI.SKEL_TORSO).x, 0, width, 0, player.length() ) );
+  player.cue( position );
+
+}
+
+void loopMusic(AudioPlayer player){
+  
+   if (!player.isPlaying()) {
+    player.rewind();
+    player.play();
+  }
+
+}
 
