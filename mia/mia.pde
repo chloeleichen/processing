@@ -11,8 +11,9 @@ SimpleOpenNI  context;
 PVector hand;
 
 float len;
-color torsoColor = color(149, 165, 166);
-color fumeColor= color(231, 76, 60);
+color torsoColor;
+color fumeColor;
+color lightColor;
 
 //draw cigi
 
@@ -26,11 +27,42 @@ float r = 20;
 float xOffset = 0.0;
 float yOffset = 0.0;
 boolean cigi = false;
+boolean shade = false;
+boolean randomLight = false;
+boolean catHead = false;
 
+//Draw lights 
 
+//Draw Cat 
+
+  Cat cat;
+
+  //for mia's eyeball movement 
+  float x;
+  float y;
+  float spdX;
+  float spdY;
+
+//DRAW USER 
 
 void setup()
 {
+  //SET UP COLOR 
+  torsoColor = color(149, 165, 166);
+  fumeColor= color(231, 76, 60);
+  lightColor = color(52, 152, 219,90);
+  
+  cat = new Cat();
+      
+  x = 0;
+  y = 10;
+    
+  spdX = random(-2, 2);
+  spdY = random(-2,2);   
+
+  
+
+
   context = new SimpleOpenNI(this);
    
   if(context.isInit() == false)
@@ -61,7 +93,17 @@ void setup()
 
 void draw()
 {
-  background(0);
+  if(shade == false){
+    background(0);
+  } else{
+  
+  fill(0, 12);
+  rect(0, 0, width, height);
+  drawLight();
+  }
+  
+  
+  
   stroke(255);
   len = (PVector.dist(getJointPosition(SimpleOpenNI.SKEL_NECK),getJointPosition(SimpleOpenNI.SKEL_TORSO)))/3;
   // update the cam
@@ -74,10 +116,19 @@ void draw()
   // draw the skeleton if it's available
   if(context.isTrackingSkeleton(1)) {
     drawSimpleFigure();
+    
+         if(catHead == true){
+    drawCat();
+    }
+    
+    
     if(cigi == true){
     drawCigi(getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND));
     }
+    
+
   }
+  
 }
 
 
@@ -141,7 +192,8 @@ PVector getJointPosition(int joint) {
 void drawBody( PVector neck, PVector lShoulder, PVector torso, PVector rShoulder ){
   
   fill(torsoColor);
-  noStroke();  
+  stroke(torsoColor); 
+  strokeWeight(2); 
   
   
   beginShape();
@@ -157,7 +209,8 @@ void drawBody( PVector neck, PVector lShoulder, PVector torso, PVector rShoulder
 
 void drawHip(PVector torso, PVector lHip, PVector rHip){
   fill(torsoColor);
-  noStroke();  
+  stroke(torsoColor); 
+  strokeWeight(2); 
   
   beginShape();
   vertex(torso.x - len, torso.y);
@@ -173,17 +226,20 @@ void drawHip(PVector torso, PVector lHip, PVector rHip){
 
 void drawLeg(PVector torso, PVector hip, PVector knee, PVector foot, Boolean left){
   fill(torsoColor);
-  noStroke();  
+  stroke(torsoColor); 
+  strokeWeight(2);
   
   beginShape();
   vertex(torso.x, torso.y);
   vertex(hip.x, hip.y);
   vertex(knee.x, knee.y);
   vertex(foot.x, foot.y);
-  if(left == true){  
+  if(left == true){ 
+   vertex(foot.x+len/6, foot.y); 
   vertex(knee.x+len/2, knee.y);
   }
   else {
+    vertex(foot.x-len/6, foot.y); 
     vertex(knee.x-len/2, knee.y);
   }
   
@@ -196,11 +252,13 @@ void drawLeg(PVector torso, PVector hip, PVector knee, PVector foot, Boolean lef
 
 void drawArm(PVector neck, PVector shoulder, PVector elbow, PVector hand, Boolean left){
   fill(torsoColor);
+  stroke(torsoColor); 
+  strokeWeight(2);
   
   PVector center = PVector.add(neck, shoulder);
   center.div(2);
 
-  noStroke();  
+   
   
   beginShape();
 
@@ -211,9 +269,11 @@ void drawArm(PVector neck, PVector shoulder, PVector elbow, PVector hand, Boolea
   vertex(elbow.x, elbow.y);
   vertex(hand.x, hand.y);
   if(left == true){  
+  vertex(hand.x+len/6, hand.y);  
   vertex(elbow.x+len/3, elbow.y);
   }
   else {
+    vertex(hand.x-len/8, hand.y);
     vertex(elbow.x-len/3, elbow.y);
   }
 
@@ -226,6 +286,8 @@ void drawArm(PVector neck, PVector shoulder, PVector elbow, PVector hand, Boolea
 
 void drawHead( PVector neck){
   fill(torsoColor);
+  stroke(torsoColor); 
+  strokeWeight(2);
   ellipse(neck.x, neck.y-20, len*1.5, len*1.5);
 }
 
@@ -236,10 +298,6 @@ PVector getP(PVector p1, PVector p2, float num){
   return p;
   
 }
-
-
-
-
 
 
 void drawLine(PVector position1, PVector position2){
@@ -275,14 +333,39 @@ void keyPressed()
     cigi = true;
     break;
     
-    case 'd':
+    case 'v':
     cigi = false;
     break;
+    
+     case 's':
+    shade = true;
+    break;
+    
+    case 'd':
+    shade = false;
+    break;
+    
+     case 'f':
+    randomLight = true;
+    break;
+    
+     case 'g':
+    randomLight = false;
+    break;
+    
+     case 'h':
+    catHead = true;
+    break;
+    
+     case 'j':
+    catHead = false;
+    break;
+    
+    
   }
  
   
-  
-}  
+  }  
 
 
 void drawCigi(PVector hand){
@@ -299,4 +382,30 @@ void drawCigi(PVector hand){
 
 
 }
+
+void drawLight(){
+  if(randomLight == true){   
+   lightColor = color(int(random(255)), int(random(255)), int(random(255)));
+   torsoColor = color(int(random(255)), int(random(255)), int(random(255)));
+  }
+  
+ fill(lightColor);
+  noStroke();
+  ellipse(getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND).x, getJointPosition(SimpleOpenNI.SKEL_LEFT_HAND).y, len, len);
+  ellipse(getJointPosition(SimpleOpenNI.SKEL_RIGHT_HAND).x, getJointPosition(SimpleOpenNI.SKEL_RIGHT_HAND).y, len, len);
+  ellipse(getJointPosition(SimpleOpenNI.SKEL_RIGHT_FOOT).x, getJointPosition(SimpleOpenNI.SKEL_RIGHT_FOOT).y, len, len);
+  ellipse(getJointPosition(SimpleOpenNI.SKEL_LEFT_FOOT).x, getJointPosition(SimpleOpenNI.SKEL_LEFT_FOOT).y, len, len);
+}
+
+
+void drawCat(){
+  torsoColor = color(192, 57, 43);
+  pushMatrix();
+  translate(getJointPosition(SimpleOpenNI.SKEL_NECK).x, getJointPosition(SimpleOpenNI.SKEL_NECK).y-70);
+
+  cat.display(); 
+  popMatrix();
+
+}
+  
 
