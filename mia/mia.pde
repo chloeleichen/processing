@@ -51,6 +51,7 @@ import ddf.minim.*;
 Minim minim;
 AudioPlayer again;
 AudioPlayer meow;
+AudioPlayer background;
 AudioPlayer groove;
 
 
@@ -104,22 +105,23 @@ void setup()
 //SET UP MUSIC 
 
 minim = new Minim(this);
-  again = minim.loadFile("again.aif");
+  again = minim.loadFile("again.mp3");
   meow = minim.loadFile("meow.mp3");
   groove = minim.loadFile("groove.mp3");
+  background = minim.loadFile("background.wav", 512);
   
-  
-  
-  
+  background.play();
+   
 }
 
 void draw()
 {
   
+  watchFrameCount();
   
   if(shade == false){
     background(0);
-  } else if{
+  } else{
   
   fill(0, 12);
   rect(0, 0, width, height);
@@ -350,39 +352,87 @@ void onVisibleUser(SimpleOpenNI curContext, int userId)
   //println("onVisibleUser - userId: " + userId);
 }
 
-void keyPressed()
+//void keyPressed()
+//{
+//  switch(key)
+//  {
+//  case 'c':
+//    cigi = true;
+//    break;
+//    
+//    case 'v':
+//    cigi = false;
+//    break;
+//    
+//     case 's':
+//    shade = true;
+//    break;
+//    
+//    case 'd':
+//    shade = false;
+//    break;
+//    
+//     case 'f':
+//    randomLight = true;
+//    break;
+//    
+//     case 'g':
+//    randomLight = false;
+//    break;
+//    
+//     case 'h':
+//    catHead = true;
+//    break;
+//    
+//     case 'j':
+//    catHead = false;
+//    break;
+//    
+//    
+//  }
+// 
+//  
+//  }
+
+void watchFrameCount()
 {
-  switch(key)
+  switch(frameCount)
   {
-  case 'c':
+  case 1550:
     cigi = true;
     break;
     
-    case 'v':
+    case 5500:
     cigi = false;
     break;
     
-     case 's':
+     case 300:
     shade = true;
     break;
     
-    case 'd':
+    case 1200:
     shade = false;
+    
     break;
     
-     case 'f':
+     case 600:
     randomLight = true;
     break;
     
-     case 'g':
+     case 900:
     randomLight = false;
+   
+   lightColor = color(231, 76, 60);
+   torsoColor = color(44, 62, 80);
     break;
     
-     case 'h':
+    case 1250:
+    groove.pause();    
+    torsoColor = color(230, 126, 34);
     catHead = true;
     break;
     
-     case 'j':
+     case 1500:
     catHead = false;
     break;
     
@@ -390,11 +440,14 @@ void keyPressed()
   }
  
   
-  }  
+  } 
+
+  
 
 
 void drawCigi(PVector hand){
-  
+  loopMusic(background);
+  torsoColor= color(127, 140, 141);
   for(int i=0; i<fumesCount; i++) {
 
     stroke(fumeColor);
@@ -409,13 +462,14 @@ void drawCigi(PVector hand){
 }
 
 void drawLight(){
-  loopMusic(again);
+  background.pause();
+  loopMusic(groove);
   if(randomLight == true){  
     
    lightColor = color(int(random(255)), int(random(255)), int(random(255)));
    torsoColor = color(int(random(255)), int(random(255)), int(random(255)));
-   drawMusic(again);
-   controlMusic(again);
+   drawMusic(groove);
+   //controlMusic(again);
    
   }
   
